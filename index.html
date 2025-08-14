@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Multi-Language Translator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #e3f2fd, #ffffff);
+        color: #333;
+    }
+    h2 {
+        text-align: center;
+        color: #007BFF;
+    }
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    label {
+        font-weight: bold;
+        margin-top: 10px;
+        display: block;
+    }
+    select, textarea, button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        margin-top: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+    textarea {
+        resize: none;
+    }
+    button {
+        background-color: #007BFF;
+        color: white;
+        cursor: pointer;
+        border: none;
+        transition: background 0.3s;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    #output {
+        margin-top: 20px;
+        padding: 12px;
+        background: #f8f9fa;
+        border: 1px solid #ccc;
+        min-height: 50px;
+        border-radius: 6px;
+        font-size: 18px;
+        color: #333;
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+        body {
+            padding: 10px;
+        }
+        .container {
+            padding: 15px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🌐 Multi-Language Translator</h2>
+
+    <label for="sourceLang">From:</label>
+    <select id="sourceLang">
+        <option value="en">English</option>
+        <option value="ml">Malayalam</option>
+        <option value="hi">Hindi</option>
+        <option value="ar">Arabic</option>
+        <option value="fr">French</option>
+        <option value="ta">Tamil</option>
+        <option value="te">Telugu</option>
+        <option value="es">Spanish</option>
+    </select>
+
+    <label for="targetLang">To:</label>
+    <select id="targetLang">
+        <option value="ml">Malayalam</option>
+        <option value="en">English</option>
+        <option value="hi">Hindi</option>
+        <option value="ar">Arabic</option>
+        <option value="fr">French</option>
+        <option value="ta">Tamil</option>
+        <option value="te">Telugu</option>
+        <option value="es">Spanish</option>
+    </select>
+
+    <label for="inputText">Enter text:</label>
+    <textarea id="inputText" rows="4" placeholder="Type your text here..."></textarea>
+
+    <button onclick="translateText()">Translate</button>
+
+    <div id="output">Translation will appear here...</div>
+</div>
+
+<script>
+function translateText() {
+    let text = document.getElementById("inputText").value.trim();
+    let fromLang = document.getElementById("sourceLang").value;
+    let toLang = document.getElementById("targetLang").value;
+
+    if (!text) {
+        document.getElementById("output").innerText = "⚠ Please enter some text.";
+        return;
+    }
+    if (fromLang === toLang) {
+        document.getElementById("output").innerText = "⚠ Source and target languages are the same.";
+        return;
+    }
+
+    fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${fromLang}|${toLang}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("output").innerText = data.responseData.translatedText;
+        })
+        .catch(error => {
+            document.getElementById("output").innerText = "❌ Error translating text.";
+            console.error(error);
+        });
+}
+</script>
+
+</body>
+</html>
